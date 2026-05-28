@@ -83,6 +83,9 @@ export default function AuthPage() {
             } else if (user && user.role === "chairperson") {
                 router.push("/dashboard/chairperson");
             }
+            else if (user && user.role === "finance") {
+                router.push("/dashboard/finance");
+            }
         }
     }, [isAuthenticated, router]);
 

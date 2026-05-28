@@ -3,7 +3,7 @@
 import { useAuth } from "@/contexts";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {images} from '@/constants'
+import { images } from '@/constants'
 // ── Types ──────────────────────────────────────────────────────
 type SidebarItem = {
     href: string;
@@ -158,8 +158,28 @@ const chairpersonSections: NavSection[] = [
         heading: "Finance & Loans",
         items: [
             { href: "/dashboard/chairperson/finance", label: "Finance Reports", icon: ReportIcon },
+            { href: "/dashboard/chairperson/transactions", label: "Transactions", icon: ActivityIcon },
+            { href: "/dashboard/chairperson/penalties", label: "Penalties", icon: ShieldIcon },
             { href: "/dashboard/chairperson/loans", label: "Loan Requests", icon: MoneyIcon },
             { href: "/dashboard/chairperson/contributions", label: "Contributions", icon: ClipboardIcon },
+        ],
+    },
+];
+
+const financeSections: NavSection[] = [
+    {
+        heading: "Overview",
+        items: [
+            { href: "/dashboard/finance", label: "Dashboard", icon: LayoutDashboardIcon },
+        ],
+    },
+    {
+        heading: "Finance",
+        items: [
+            { href: "/dashboard/finance/contributions", label: "Contributions", icon: ClipboardIcon },
+            { href: "/dashboard/finance/loans", label: "Loans", icon: MoneyIcon },
+            { href: "/dashboard/finance/transactions", label: "Transactions", icon: ActivityIcon },
+            { href: "/dashboard/finance/reports", label: "Reports", icon: ReportIcon },
         ],
     },
 ];
@@ -170,10 +190,11 @@ type DashboardSidebarProps = {
 
 export default function DashboardSidebar({ pathname }: DashboardSidebarProps) {
 
-    const [isAdmin, setIsAdmin]= useState<boolean>(false);
-    const {user}= useAuth(); 
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const { user } = useAuth();
     const isChairperson = pathname.startsWith("/dashboard/chairperson");
-    const sections = isAdmin ? adminSections : isChairperson ? chairpersonSections : [];
+    const isFinance = pathname.startsWith("/dashboard/finance");
+    const sections = isAdmin ? adminSections : isChairperson ? chairpersonSections : isFinance ? financeSections : [];
 
     useEffect(() => {
         if (user) {
@@ -195,7 +216,7 @@ export default function DashboardSidebar({ pathname }: DashboardSidebarProps) {
                 <div className="min-w-0">
                     <p className="truncate text-sm font-bold tracking-tight text-white">IBIBINA</p>
                     <p className="truncate text-[11px] text-white/50">
-                        {isAdmin ? "Administration" : isChairperson ? "Chairperson" : "Member Portal"}
+                        {isAdmin ? "Administration" : isChairperson ? "Chairperson" : isFinance ? "Finance" : "Member Portal"}
                     </p>
                 </div>
             </div>
@@ -204,7 +225,7 @@ export default function DashboardSidebar({ pathname }: DashboardSidebarProps) {
             <div className="mx-4 mt-4 rounded-xl border border-white/10 bg-white/8 px-3 py-3">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40">Active Role</p>
                 <p className="mt-1 text-sm font-semibold text-white">
-                    {isAdmin ? "System Administrator" : isChairperson ? "Group Chairperson" : "Workspace Member"}
+                    {isAdmin ? "System Administrator" : isChairperson ? "Group Chairperson" : isFinance ? "Finance Officer" : "Workspace Member"}
                 </p>
                 <div className="mt-2 flex items-center gap-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -232,8 +253,8 @@ export default function DashboardSidebar({ pathname }: DashboardSidebarProps) {
                                         <Link
                                             href={item.href}
                                             className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 ${isActive
-                                                    ? "bg-white/15 text-white"
-                                                    : "text-white/55 hover:bg-white/8 hover:text-white"
+                                                ? "bg-white/15 text-white"
+                                                : "text-white/55 hover:bg-white/8 hover:text-white"
                                                 }`}
                                         >
                                             {/* Active bar */}
@@ -261,11 +282,11 @@ export default function DashboardSidebar({ pathname }: DashboardSidebarProps) {
             <div className="border-t border-white/10 px-3 py-3">
                 <div className="flex items-center gap-3 rounded-xl bg-white/6 px-3 py-2.5">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-xs font-bold text-white">
-                        {isAdmin ? "AD" : isChairperson ? "CH" : "MB"}
+                        {isAdmin ? "AD" : isChairperson ? "CH" : isFinance ? "FO" : "MB"}
                     </div>
                     <div className="min-w-0 flex-1">
                         <p className="truncate text-xs font-semibold text-white">
-                            {isAdmin ? "Administrator" : isChairperson ? "Chairperson" : "Member"}
+                            {isAdmin ? "Administrator" : isChairperson ? "Chairperson" : isFinance ? "Finance Officer" : "Member"}
                         </p>
                         <p className="truncate text-[10px] text-white/40">ibibina.system</p>
                     </div>

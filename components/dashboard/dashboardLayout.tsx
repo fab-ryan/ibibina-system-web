@@ -23,7 +23,7 @@ export default function DashboardLayout({
 
                 {/* Content ─ scrolls independently */}
                 <main className="flex-1 overflow-y-auto">
-                    <div className="fade-up mx-auto max-w-screen-2xl px-4 py-6 md:px-6 lg:px-8 lg:py-8 h-screen">
+                    <div className="mx-auto max-w-screen-2xl px-4 py-6 md:px-6 lg:px-8 lg:py-8 h-screen">
                         {children}
                     </div>
                 </main>

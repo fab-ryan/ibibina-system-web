@@ -117,5 +117,14 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithErrorHandling,
   endpoints: () => ({}), // Define your endpoints here
-  tagTypes: ["Auth", "Activities", "Groups", "Users", "Loans", "Contributions"], // Add tag types for cache invalidation
+  tagTypes: [
+    "Auth",
+    "Activities",
+    "Groups",
+    "Users",
+    "Loans",
+    "Contributions",
+    "Transactions",
+    "Penalties",
+  ], // Add tag types for cache invalidation
 });

@@ -21,20 +21,22 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, descrip
 
         if (isOpen) {
             document.addEventListener("mousedown", handleClickOutside);
+            document.body.style.overflow = "hidden";
         } else {
             document.removeEventListener("mousedown", handleClickOutside);
         }
 
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+            document.body.style.overflow = "";
         };
     }, [isOpen, onClose]);
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 place-items-center bg-[#081936]/45 p-4 backdrop-blur-sm  flex overflow-hidden top-0 left-0">
-            <section className="w-full max-w-2xl rounded-xl border border-(--ib-line) bg-white shadow-2xl m-auto " ref={modalRef}>
-                <div className="flex items-start justify-between gap-4 border-b border-(--ib-line) p-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[#081936]/45 p-4 backdrop-blur-sm">
+            <section className="w-full max-w-2xl flex flex-col rounded-xl border border-(--ib-line) bg-white shadow-2xl max-h-[80vh]" ref={modalRef}>
+                <div className="flex shrink-0 items-start justify-between gap-4 border-b border-(--ib-line) p-5">
                     <div>
                         <h3 className="headline text-xl text-foreground">
                             {title}
@@ -53,7 +55,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, descrip
                         <X size={17} />
                     </button>
                 </div>
-                <div className="p-5">
+                <div className="overflow-y-auto">
                     {children}
                 </div>
             </section>
