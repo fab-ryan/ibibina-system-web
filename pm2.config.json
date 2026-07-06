@@ -1,0 +1,17 @@
+{
+    "apps": [{
+        "name": "ibibina-web",
+        "script": "npm",
+        "args": "start",
+        "autorestart": true,
+        "interpreter": "none",
+        "watch": false,
+        "watch_options": {
+            "usePolling": true
+        },
+        "before_restart": "npm run build",
+        "env": {
+            "NODE_ENV": "production"
+        }
+    }]
+}
