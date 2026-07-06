@@ -133,15 +133,15 @@ const adminSections: NavSection[] = [
             { href: "/dashboard/admin/reports", label: "Reports", icon: ReportIcon },
         ],
     },
-    {
-        heading: "System",
-        items: [
-            { href: "/dashboard/admin/security", label: "Security", icon: ShieldIcon },
-            { href: "/dashboard/admin/performance", label: "Performance", icon: GaugeIcon },
-            { href: "/dashboard/admin/audit", label: "Audit Logs", icon: ActivityIcon },
-            { href: "/dashboard/admin/settings", label: "Settings", icon: SettingsIcon },
-        ],
-    },
+    // {
+    //     heading: "System",
+    //     items: [
+    //         { href: "/dashboard/admin/security", label: "Security", icon: ShieldIcon },
+    //         { href: "/dashboard/admin/performance", label: "Performance", icon: GaugeIcon },
+    //         { href: "/dashboard/admin/audit", label: "Audit Logs", icon: ActivityIcon },
+    //         { href: "/dashboard/admin/settings", label: "Settings", icon: SettingsIcon },
+    //     ],
+    // },
 ];
 
 const chairpersonSections: NavSection[] = [
