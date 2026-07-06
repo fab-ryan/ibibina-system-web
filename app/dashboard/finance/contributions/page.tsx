@@ -11,7 +11,7 @@ import {
     usePayContributionMutation,
     useWaiveContributionMutation,
 } from "@/api/contribution";
-import type { Contribution, PaymentMethod } from "@/types/res/contribution";
+import type { Contribution, ContributionStatus, PaymentMethod } from "@/types/res/contribution";
 import Modal from "@/components/ui/modal";
 import Pagination from "@/components/ui/pagination";
 import Spinner from "@/components/ui/spinner";
@@ -101,7 +101,7 @@ export default function FinanceContributionsPage() {
     const [waiveNotes, setWaiveNotes] = useState("");
 
     const { data, isLoading, isFetching, refetch } = useGetContributionsQuery(
-        { groupId, status: statusFilter || undefined, page, limit },
+        { groupId, status: statusFilter as ContributionStatus || undefined, page, limit },
         { skip: !groupId }
     );
     const { data: summary } = useGetContributionGroupSummaryQuery(
@@ -172,7 +172,7 @@ export default function FinanceContributionsPage() {
     async function handleWaive() {
         if (!selected) return;
         try {
-            await waiveContribution({ id: selected.id, notes: waiveNotes || undefined }).unwrap();
+            await waiveContribution({ id: selected.id, data: { reason: waiveNotes || '' } }).unwrap();
             toast.success("Waived", `Contribution for ${memberName(selected)} has been waived.`);
             close();
         } catch (err: any) {

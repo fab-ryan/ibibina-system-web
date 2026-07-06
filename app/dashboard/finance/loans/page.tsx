@@ -130,7 +130,7 @@ export default function FinanceLoansPage() {
             setRepayMomoRef(""); setRepayBankRef(""); setRepayNotes("");
         }
         if (mode === "schedule") {
-            getRepaymentSchedule({ loanId: loan.id });
+            getRepaymentSchedule({ id: loan.id });
         }
         setActiveModal(mode);
     }
@@ -155,12 +155,14 @@ export default function FinanceLoansPage() {
         }
         try {
             await recordRepayment({
-                loanId: selected.id,
-                amount: parseFloat(repayAmount),
-                paymentMethod: repayMethod,
-                momoRef: repayMomoRef || undefined,
-                bankRef: repayBankRef || undefined,
-                notes: repayNotes || undefined,
+                id: selected.id,
+                data: {
+                    amountPaid: parseFloat(repayAmount),
+                    paymentMethod: repayMethod,
+                    momoRef: repayMomoRef || undefined,
+                    bankRef: repayBankRef || undefined,
+                    notes: repayNotes || undefined,
+                }
             }).unwrap();
             toast.success("Repayment recorded", `Repayment from ${memberName(selected)} has been saved.`);
             close();
