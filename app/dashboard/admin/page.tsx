@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
     Activity,
@@ -9,14 +11,9 @@ import {
     UserPlus,
     Users,
 } from "lucide-react";
+import { useGetAdminOverviewQuery } from "@/api/dashboard";
 
-const overviewStats = [
-    { label: "Active Users", value: "1,204", trend: "+12% this week", icon: Users },
-    { label: "Registered Groups", value: "24", trend: "+3 this month", icon: Building2 },
-    { label: "Security Score", value: "94%", trend: "2 alerts open", icon: ShieldCheck },
-    { label: "System Uptime", value: "99.98%", trend: "30 day window", icon: Gauge },
-];
-
+// Static data removed in favor of dynamic query data
 const adminModules = [
     {
         title: "Users",
@@ -65,6 +62,16 @@ const healthItems = [
 ];
 
 export default function AdminDashboardPage() {
+    const { data: adminData } = useGetAdminOverviewQuery();
+    const stats = adminData?.data;
+
+    const overviewStats = [
+        { label: "Active Users", value: stats?.activeUsers.toLocaleString() ?? "-", trend: "Live system data", icon: Users },
+        { label: "Registered Groups", value: stats?.registeredGroups.toLocaleString() ?? "-", trend: "Live system data", icon: Building2 },
+        { label: "Security Score", value: stats ? `${stats.securityScore}%` : "-", trend: "Healthy", icon: ShieldCheck },
+        { label: "System Uptime", value: stats ? `${stats.systemUptime}%` : "-", trend: "30 day window", icon: Gauge },
+    ];
+
     return (
         <div className="grid gap-6">
             <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

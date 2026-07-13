@@ -18,7 +18,7 @@ export type GroupPurpose =
     | "agriculture"
     | "other";
 
-export type ContributionFrequency = "weekly" | "monthly";
+export type ContributionFrequency = "weekly" | "monthly" | "two" | "twice_a_week" | "thrice_a_week" | "yearly";
 export type MeetingDay =
     | "monday"
     | "tuesday"
@@ -70,8 +70,12 @@ export const groupPurposeOptions = [
 ];
 
 export const contributionFrequencyOptions = [
+    { label: "Two days Per week", value: "two" },
+    { label: "Twice a week", value: "twice_a_week" },
     { label: "Weekly", value: "weekly" },
+    { label: "Thrice a week", value: "thrice_a_week" },
     { label: "Monthly", value: "monthly" },
+    { label: "Yearly", value: "yearly" },
 ];
 
 export const meetingDayOptions = [
@@ -145,7 +149,7 @@ export const groupFormSchema = yup.object({
     contributionCurrency: yup.string().trim().required("Currency is required."),
     contributionFrequency: yup
         .mixed<ContributionFrequency>()
-        .oneOf(["weekly", "monthly"])
+        .oneOf(["weekly", "monthly", "two", "twice_a_week", "thrice_a_week", "yearly"])
         .required("Contribution frequency is required."),
     meetingDay: yup
         .mixed<MeetingDay>()

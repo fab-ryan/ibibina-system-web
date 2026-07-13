@@ -24,6 +24,7 @@ import {
     useGetUsersStaticsQuery,
     useLazyGetUsersQuery,
     useUpdateUserMutation,
+    useResetUserCredentialsMutation,
 } from "@/api/users";
 import { useGetActiveGroupsQuery } from "@/api/group";
 import { User, UserRole, UserStatus } from "@/types";
@@ -234,10 +235,12 @@ export default function AdminUsersPage() {
     const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
     const [viewingUser, setViewingUser] = useState<AdminUser | null>(null);
     const [actionUser, setActionUser] = useState<AdminUser | null>(null);
+    const [resetUser, setResetUser] = useState<AdminUser | null>(null);
     const [actionType, setActionType] = useState<"suspend" | "activate" | "delete" | null>(null);
     const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
     const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
     const [deleteUserMutation, { isLoading: isDeleting }] = useDeleteUserMutation();
+    const [resetCredentials, { isLoading: isResetting }] = useResetUserCredentialsMutation();
     const toast = useToast();
 
     const {
@@ -485,14 +488,33 @@ export default function AdminUsersPage() {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function bulkUpdateStatus(_status: UserStatus) {
-        // setUsers((currentUsers) =>
-        //     currentUsers.map((user) =>
-        //         selectedUsers.includes(user.id)
-        //             ? { ...user, status, updatedAt: new Date().toISOString() }
-        //             : user,
-        //     ),
-        // );
+
         setSelectedUsers([]);
+    }
+    const handleResetCredentials = async () => {
+        if (!resetUser) return;
+        try {
+            const response = await resetCredentials(resetUser.id).unwrap();
+            if (response.success) {
+                toast.success("Credentials reset successfully", response?.message ?? "Credentials reset");
+                setMenuUserId(null);
+                closeResetDialog();
+                setSelectedUsers([]);
+                fetchUsers({
+                    search: query || undefined,
+                    status: statusFilter === "all" ? undefined : statusFilter,
+                    page: currentPage,
+                    limit: pageSize,
+                })
+            }
+        } catch (error: any) {
+            const errMsg = error?.data?.message || "Failed to reset credentials. Please try again.";
+            toast.error("Error", errMsg);
+        }
+    }
+
+    const closeResetDialog = () => {
+        setIsResettingPasswordOpen(false)
     }
 
     return (
@@ -722,7 +744,11 @@ export default function AdminUsersPage() {
                                             Edit user
                                         </button>
                                         <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-(--ib-muted) hover:bg-[#f4f7fc]"
-                                            onClick={() => setIsResettingPasswordOpen(true)}
+                                            onClick={() => {
+                                                setResetUser(user);
+                                                setIsResettingPasswordOpen(true);
+                                                setMenuUserId(null);
+                                            }}
                                         >
                                             <KeyRound size={15} />
                                             Reset password or PIN
@@ -1005,7 +1031,10 @@ export default function AdminUsersPage() {
             )}
             <Modal
                 isOpen={isResettingPasswordOpen}
-                onClose={() => setIsResettingPasswordOpen(false)}
+                onClose={() => {
+                    setIsResettingPasswordOpen(false);
+                    setResetUser(null);
+                }}
                 title="Reset password or PIN"
                 description="Set a new temporary password or PIN for the user. They will be prompted to change it on their next login."
             >
@@ -1014,10 +1043,19 @@ export default function AdminUsersPage() {
                         This will allow you to set a new temporary password (for admins) or PIN (for non-admins) for the user. They will be required to change it when they next log in.
                     </p>
                     <div className="">
-                        <Button type="button" onClick={() => () => { }} className="ib-btn-primary w-full">
+                        <Button
+                            type="button"
+                            onClick={handleResetCredentials}
+                            className="ib-btn-primary w-full"
+                            loading={isResetting}
+                            loadingText="Resetting..."
+                        >
                             Set new temporary password/PIN
                         </Button>
-                        <Button type="button" variant="secondary" onClick={() => setIsResettingPasswordOpen(false)} className="ib-btn-secondary w-full mt-2">
+                        <Button type="button" variant="secondary" onClick={() => {
+                            setIsResettingPasswordOpen(false);
+                            setResetUser(null);
+                        }} className="ib-btn-secondary w-full mt-2">
                             Cancel
                         </Button>
 

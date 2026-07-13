@@ -24,7 +24,6 @@ const AuthSchema = yup.object()
 
                 const isNumber = /^[0-9+]+$/.test(value);
 
-                // 👉 If input looks like a phone number
                 if (isNumber) {
                     const phoneRegex = /^(?:\+250|0)?7[2389]\d{7}$/;
 
@@ -87,7 +86,7 @@ export default function AuthPage() {
                 router.push("/dashboard/finance");
             }
         }
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated]);
 
     async function handleLogin(data: AuthFormData) {
         try {
@@ -109,9 +108,12 @@ export default function AuthPage() {
                 setTokens(result.data.tokens.accessToken as string, result.data.tokens.refreshToken as string);
                 setUser(result.data.user);
                 if (result?.data?.user?.role === "admin") {
-
                     router.push("/dashboard/admin");
-                } else router.push("/dashboard/chairperson");
+                } else if (result?.data?.user?.role === "finance") {
+                    router.push("/dashboard/finance");
+                } else {
+                    router.push("/dashboard/chairperson");
+                }
             } else {
                 setError(result.message || "Login failed. Please try again.");
             }

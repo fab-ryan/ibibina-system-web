@@ -4,6 +4,7 @@ import {
   ContributionOverviewResponse,
   FinanceDashboardResponse,
   FinanceReportResponse,
+  AdminOverviewResponse,
 } from "@/types/res/dashboard";
 
 export const dashboardApi = api.injectEndpoints({
@@ -25,6 +26,9 @@ export const dashboardApi = api.injectEndpoints({
     getFinanceReport: build.query<FinanceReportResponse, void>({
       query: () => ({ url: "/dashboard/staff/finance", method: "GET" }),
     }),
+    getAdminOverview: build.query<AdminOverviewResponse, void>({
+      query: () => ({ url: "/dashboard/admin/overview", method: "GET" }),
+    }),
   }),
 });
 
@@ -32,4 +36,5 @@ export const {
   useGetFinanceDashboardQuery,
   useGetContributionOverviewQuery,
   useGetFinanceReportQuery,
+  useGetAdminOverviewQuery,
 } = dashboardApi;

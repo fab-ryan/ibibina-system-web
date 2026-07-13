@@ -83,3 +83,12 @@ export interface FinanceReportData {
 }
 
 export type FinanceReportResponse = BaseResponse<FinanceReportData>;
+
+export interface AdminOverviewData {
+  activeUsers: number;
+  registeredGroups: number;
+  securityScore: number;
+  systemUptime: number;
+}
+
+export type AdminOverviewResponse = BaseResponse<AdminOverviewData>;

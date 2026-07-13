@@ -62,6 +62,12 @@ export const usersApi = api.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    resetUserCredentials: build.mutation<{ success: boolean; message?: string }, string>({
+      query: (userId) => ({
+        url: `/users/${userId}/reset-credentials`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -71,4 +77,5 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useResetUserCredentialsMutation,
 } = usersApi;

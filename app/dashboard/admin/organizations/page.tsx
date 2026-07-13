@@ -272,7 +272,7 @@ export default function AdminOrganizationsPage() {
     const [assignChairperson, { isLoading: isAssigningChairperson }] = useAssignChairpersonMutation();
     const [changeMembershipRole, { isLoading: isChangingMembershipRole }] = useChangeMembershipRoleMutation();
     const [fetchGroupMembers, { data: groupMembersData, isFetching: isFetchingMembers }] = useLazyGetUsersQuery();
-    const [createUser] = useCreateUserMutation();
+    const [createUser, {isLoading: isCreatingUser}] = useCreateUserMutation();
     const navigate = useRouter()
 
 
@@ -417,6 +417,7 @@ export default function AdminOrganizationsPage() {
     async function addMember() {
         if (!selectedGroup || !addMemberForm.firstName.trim() || !addMemberForm.lastName.trim()) return;
         setIsAddingMember(true);
+        if (isCreatingUser) return;
         try {
             await createUser({
                 firstName: addMemberForm.firstName.trim(),
@@ -879,7 +880,7 @@ export default function AdminOrganizationsPage() {
                 description={selectedGroup ? `Add a new member to ${selectedGroup.name}.` : ""}
             >
                 <div className="grid gap-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2 px-4 mt-4">
                         <Input
                             label="First name"
                             required
@@ -895,7 +896,7 @@ export default function AdminOrganizationsPage() {
                             placeholder="e.g. Mugisha"
                         />
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2 px-2">
                         <Input
                             label="Phone"
                             value={addMemberForm.phone}
@@ -910,22 +911,25 @@ export default function AdminOrganizationsPage() {
                             placeholder="member@example.com"
                         />
                     </div>
-                    <Dropdown
-                        label="Role"
-                        value={addMemberForm.role}
-                        onValueChange={(val) => setAddMemberForm((p) => ({ ...p, role: val as UserRole }))}
-                        options={memberRoleOptions}
-                    />
+                    <div className="px-2">
+                        <Dropdown
+                            label="Role"
+                            value={addMemberForm.role}
+                            onValueChange={(val) => setAddMemberForm((p) => ({ ...p, role: val as UserRole }))}
+                            options={memberRoleOptions}
+                            className="mt-2"
+                        />
+                    </div>
                     <div className="flex justify-end gap-2 border-t border-(--ib-line) pt-4">
                         <button type="button" className="ib-btn-secondary" onClick={() => setIsAddMemberOpen(false)}>Cancel</button>
                         <button
                             type="button"
                             className="ib-btn-primary"
-                            disabled={isAddingMember || !addMemberForm.firstName.trim() || !addMemberForm.lastName.trim()}
+                            disabled={isCreatingUser || !addMemberForm.firstName.trim() || !addMemberForm.lastName.trim()}
                             onClick={addMember}
                         >
                             <UserPlus size={16} />
-                            {isAddingMember ? "Adding..." : "Add Member"}
+                            {isCreatingUser ? "Adding..." : "Add Member"}
                         </button>
                     </div>
                 </div>
